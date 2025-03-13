@@ -1,0 +1,45 @@
+---
+title: "Analysis of predicted protein levels in tumour samples"
+author: Si Fang
+date: "`r format(Sys.time(), '%d %B %Y')`"
+format: 
+  html:
+    toc: true
+    toc-location: left
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(gtsummary)
+library(gt)
+library(cowplot)
+library(ggrepel)
+library(dplyr)
+library(ggplot2)
+library(here)
+library(meffonym) 
+
+# Read environment file
+readRenviron(here("config.env"))
+
+datadir <- Sys.getenv("datadir")
+resultsdir <- Sys.getenv("resultsdir")
+```
+
+
+```{r}
+#| label: load data
+#| include: FALSE
+
+filename <- file.path(resultsdir, "combined-clin-pred-proteins.txt")
+# Load data
+data <- read.table(filename, header = T, sep = "\t", stringsAsFactors = F)
+
+# Protein names
+protein.names <- subset(meffonym::meffonym.models(full = T),
+    grepl("^episcores", filename))$name
+protein.names <- make.names(protein.names)
+```
+
